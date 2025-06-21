@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
-// import { sequelize } from './index.js';
-// import bcrypt from 'bcryptjs';
+import { sequelize } from './index.js';
+import bcrypt from 'bcryptjs';
 
 const userModel = (sequelize) => {
     const User = sequelize.define('User', {
@@ -46,30 +46,31 @@ const userModel = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        ageKids:{
+        ageKids: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
     }, {
         tableName: 'users',
         timestamps: false,
-        // hooks: {
-        //     beforeCreate: async (user) => {
-        //         if (user.password) {
-        //             const salt = await bcrypt.genSalt(10);
-        //             user.password = await bcrypt.hash(user.password, salt);
-        //         }
-        //     },
-        //     beforeUpdate: async (user) => {
-        //         if (user.changed('password')) {
-        //             const salt = await bcrypt.genSalt(10);
-        //             user.password = await bcrypt.hash(user.password, salt);
-        //         }
-        //     },
-        // },
+        hooks: {
+            beforeCreate: async (user) => {
+                if (user.password) {
+                    const salt = await bcrypt.genSalt(10);
+                    user.password = await bcrypt.hash(user.password, salt);
+                }
+            },
+            beforeUpdate: async (user) => {
+                if (user.changed('password')) {
+                    const salt = await bcrypt.genSalt(10);
+                    user.password = await bcrypt.hash(user.password, salt);
+                }
+            },
+        },
+
     });
 
-    
+
 
     return User;
 };

@@ -32,26 +32,39 @@ app.use('/api/sitters', sitterRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+// ✅ Global error handler (should be last middleware)
+app.use((err, req, res, next) => {
+    console.error('Global error:', err.stack);
+    res.status(500).json({ message: 'Something went wrong!', error: err.message });
+});
+
+/*
+    * Routes have been moved to their respective files
+    * This is to keep the code organized and maintainable.
+    * If you need to access routes for users, go to `routes/userRoutes.js`
+    * If you need to access routes for sitters, go to `routes/sitterRoutes.js`
+    * If you need to access routes for bookings, go to `routes/bookingRoutes.js`
+    * If you need to access routes for authentication, go to `routes/authRoutes.js`
+    * 
+    * Keep the workflow simple and organized.
+    * If you need to add more routes, create a new file in the `routes` directory
+    * and import it here.
+*/
+
+/*
+    * HOW TO USE THE ROUTES
+    * 1. For sitters, use the `/api/sitters` endpoint.
+    * 2. For bookings, use the `/api/bookings` endpoint.
+    * 3. For users, use the `/api/users` endpoint.
+    * 4. For authentication, use the `/api/auth` endpoint.
+    * 
+    * Example: To register a user, send a POST request to `/api/users/register`
+    * Example: To get all sitters, send a GET request to `/api/sitters`
+*/
 
 // ✅ Frontend Routes
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
-});
-
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend', 'login.html'));
-});
-
-app.get('/parent/register', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend', 'register.html'));
-});
-
-app.get('/singup', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend', 'signup.html'));
-});
-
-app.get('/sitters', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend', 'sitters.html'));
 });
 
 app.get('/api/payment-details', (req, res) => {
@@ -60,12 +73,6 @@ app.get('/api/payment-details', (req, res) => {
         paybill: '123456',
         accountNumber: 'SITS-001',
     });
-});
-
-// ✅ Global error handler (should be last middleware)
-app.use((err, req, res, next) => {
-    console.error('Global error:', err.stack);
-    res.status(500).json({ message: 'Something went wrong!', error: err.message });
 });
 
 export default app;

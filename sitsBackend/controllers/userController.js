@@ -4,7 +4,7 @@ import { createUser, getUserById, getUserByEmail, updateUser } from '../models/i
 
 export const registerParent = async (req, res) => {
     try {
-        const { firstname, lastname, email, phone, password, location, numKids } = req.body;
+        const { firstname, lastname, email, phone, password, location, numKids, ageKids } = req.body;
         if (!firstname || !lastname || !email || !password || !phone) {
             return res.status(400).json({ message: 'Missing required fields' });
         }
@@ -20,6 +20,7 @@ export const registerParent = async (req, res) => {
             password,
             location,
             numKids,
+            ageKids,
         });
         const token = jwt.sign({ userId: newUser.id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.status(201).json({ message: 'Parent registered successfully', userId: newUser.id, token });
@@ -37,11 +38,11 @@ export const loginParent = async (req, res) => {
         }
         const user = await getUserByEmail(email);
         if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'User not found' });
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'Wrong password' });
         }
         const token = jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.json({ message: 'Login successful', userId: user.id, token });
