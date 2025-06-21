@@ -10,7 +10,7 @@ import path from 'path';
 import multer from 'multer';
 
 // Importing necessary sitters controllers
-import { registerSitter } from '../controllers/sitterController.js';
+import { loginSitter, registerSitter } from '../controllers/sitterController.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,13 +47,15 @@ router.get('/register', (req, res) => {
 });
 
 router.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../frontend', 'login.html'));
+  res.sendFile(path.join(__dirname, '../../frontend', 'sitter.login.html'));
 });
 
 
 
 // Routers to handle all post requests for the sitters
 router.post('/register', upload.single('profilePic'), registerSitter);
+
+// This is irrelevant
 router.post('/signup', upload.single('profilePic'), async (req, res) => {
   try {
     const { firstname, lastname, email, password, location, years, availability, phone } = req.body;
@@ -132,7 +134,9 @@ router.post('/signup', upload.single('profilePic'), async (req, res) => {
 //   }
 // });
 
-router.post('/loginSitter', async (req, res) => {
+router.post('/login', loginSitter);
+
+router.post('/sitterlogin', async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ where: { email, role: 'sitter' } });
