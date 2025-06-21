@@ -38,17 +38,20 @@ const connectDB = async () => {
     }
 };
 
-const createUser = async ({ firstname, lastname, email, password, phone, profilePic, location, numKids }) => {
+
+// Added missing 'ageKids'
+const createUser = async ({ firstname, lastname, email,  phone,numKids,password ,profilePic, location, ageKids }) => {
     try {
         const user = await User.create({
             firstname,
             lastname,
             email,
-            password,
             phone,
+            numKids,
+            password,
             profilePic,
             location,
-            numKids,
+            ageKids,
         });
         return {
             id: user.id,
@@ -56,9 +59,10 @@ const createUser = async ({ firstname, lastname, email, password, phone, profile
             lastname: user.lastname,
             email: user.email,
             phone: user.phone,
+            numKids: user.numKids,
             profilePic: user.profilePic,
             location: user.location,
-            numKids: user.numKids,
+            ageKids: user.ageKids,            
         };
     } catch (error) {
         console.error('Error creating user:', error);
@@ -96,6 +100,36 @@ const updateUser = async (id, updates) => {
     } catch (error) {
         console.error('Error updating user:', error);
         throw new Error(`Failed to update user: ${error.message}`);
+    }
+};
+
+
+// Sitter related functions
+const createSitter = async ({ userId, firstname, lastname, email, password, phone, profilePic, location, numKids }) => {
+    try {
+        const user = await User.create({
+            firstname,
+            lastname,
+            email,
+            password,
+            phone,
+            profilePic,
+            location,
+            numKids,
+        });
+        return {
+            id: user.id,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+            phone: user.phone,
+            profilePic: user.profilePic,
+            location: user.location,
+            numKids: user.numKids,
+        };
+    } catch (error) {
+        console.error('Error creating user:', error);
+        throw new Error(`Failed to create user: ${error.message}`);
     }
 };
 
@@ -142,4 +176,4 @@ const updateSitter = async (id, updates) => {
     }
 };
 
-export { sequelize, connectDB, User, Sitter,Booking, createUser, getUserById, getUserByEmail, updateUser, getAllSitters, getSitterById, getSitterByEmail, updateSitter };
+export { sequelize, connectDB, User, Sitter,Booking, createUser, getUserById, getUserByEmail, updateUser, createSitter,getAllSitters, getSitterById, getSitterByEmail, updateSitter };

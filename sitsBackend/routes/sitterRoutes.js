@@ -9,6 +9,9 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import multer from 'multer';
 
+// Importing necessary sitters controllers
+import { registerSitter } from '../controllers/sitterController.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // const secret = process.env.JWT_SECRET || 'your-default-secret';
@@ -35,6 +38,24 @@ const upload = multer({
 });
 
 const router = express.Router();
+
+// Routers to handle all get requests for the sitters
+router.get('/', async (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend', 'sitters.html'));
+});
+
+router.get('/register', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend', 'signup.html'));
+});
+
+router.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend', 'login.html'));
+});
+
+
+
+// Routers to handle all post requests for the sitters
+router.post('/register', upload.single('profilePic'), registerSitter);
 router.post('/signup', upload.single('profilePic'), async (req, res) => {
   try {
     const { firstname, lastname, email, password, location, years, availability, phone } = req.body;
