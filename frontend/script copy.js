@@ -265,7 +265,7 @@
 // //         alert(email.includes('@') ? `Thanks for subscribing with ${email}!` : 'Please enter a valid email');
 // //         e.target.reset();
 // //     });
-const BASE_URL =" http://localhost:3000";
+const BASE_URL ="http://localhost:3000";
 
 function toggleMenu() {
   const navLinks = document.getElementById("nav-links");
@@ -338,7 +338,7 @@ const registerUser = () => {
     const email = document.getElementById("email")?.value.trim();
     const password = document.getElementById("password")?.value;
     const location = document.getElementById("location")?.value || "";
-    const numberOfChildren = document.getElementById("numKids")?.value || "";
+    const numberOfChildren = document.getElementById("numKids")?.value || "" + " " + ("ageKids")?.value || "";
     // Role logic - adjust depending on page
     const role = window.location.href.includes("signup") ? "sitter" : "parent";
 
@@ -352,10 +352,11 @@ const registerUser = () => {
     };
 
     try {
+      const formData = new FormData(form);
       const res = await fetch(`${BASE_URL}/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
+        body: formData,
       });
 
       const data = await res.json();
@@ -413,10 +414,10 @@ const registerUser = () => {
      const email = document.getElementById("email")?.value.trim();
      const password = document.getElementById("password")?.value;
      const role = window.location.search.includes("sitter") ? "sitter" : "parent";
-     const endpoint = role === "sitter" ? "/sitters/login" : "/auth/login";
+     const endpoint = role === "sitter" ? "/sitters/loginSitter" : "/auth/login";
 
      try {
-       const res = await fetch(`${BASE_URL}`, {
+       const res = await fetch(`${BASE_URL}${endpoint}`, {
          method: "POST",
          headers: { "Content-Type": "application/json" },
          body: JSON.stringify({ email, password }),
@@ -480,9 +481,9 @@ document.addEventListener("DOMContentLoaded", () => {
   } else if (path.includes("login.html")) {
     loginUser();
   }
-});
+// });
 
-document.addEventListener("DOMContentLoaded", () => {
+// document.addEventListener("DOMContentLoaded", () => {
   const bookButtons = document.querySelectorAll(".bookme");
 
   bookButtons.forEach(button => {

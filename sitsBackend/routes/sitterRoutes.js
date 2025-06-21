@@ -11,6 +11,8 @@ import multer from 'multer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+// const secret = process.env.JWT_SECRET || 'your-default-secret';
+
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -59,6 +61,7 @@ router.post('/signup', upload.single('profilePic'), async (req, res) => {
     const user = await User.create({
       firstname,
       lastname,
+      location,
       email,
       password: hashedPassword,
       phone,
@@ -66,7 +69,12 @@ router.post('/signup', upload.single('profilePic'), async (req, res) => {
     });
     await Sitter.create({
       userId: user.id,
+      firstname,
+      lastname,
       location,
+      password,
+      phone,
+      email,
       experience: years,
       availability: availabilityJSON,
       profilePic: req.file ? `/uploads/${req.file.filename}` : null,
@@ -79,38 +87,6 @@ router.post('/signup', upload.single('profilePic'), async (req, res) => {
 });
 
 
-// router.post('/signup', upload.single('profilePic'), async (req, res) => {
-//   try {
-//     const { firstname, lastname, email, password, location, years, availability, phone } = req.body;
-    
-//     const existingUser = await User.findOne({ where: { email } });
-//     if (existingUser) {
-//       return res.status(400).json({ message: 'User already exists' });
-//     }
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     const user = await User.create({
-//       firstname,
-//       lastname,
-//       email,
-//       password: hashedPassword,
-//       phone,
-//       role: 'sitter',
-//     });
-//     const availabilityJSON = JSON.parse(availability);
-//     await sitterProfile.create({
-//       userId: user.id,
-//       location,
-//       experience: years,
-//       availability: availabilityJSON,
-//       profilePic: req.file ? `/uploads/${req.file.filename}` : null,
-//     });
-//     res.status(201).json({ message: 'Sitter registered successfully' });
-//   } catch (error) {
-//     console.error('Registration error:', error);
-//     res.status(500).json({ message: 'Registration failed', error: error.message });
-//   }
-// });
-
 router.post('/loginSitter', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -122,6 +98,9 @@ router.post('/loginSitter', async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
+
+    const secret = process.env.JWT_SECRET || 'my-super-secret';
+
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: 'sitter' },
       process.env.JWT_SECRET,
