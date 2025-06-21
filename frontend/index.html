@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/sit.com_logo.png" type="image/png">
+    <title>Sitter Platform</title>
+    <link rel="stylesheet" href="styleindex.css">
+</head>
+<body>
+<header> 
+  <nav class="navbar">
+    <img src="images/sit.com_logo.png" alt="logo">
+    <div class="h2">
+    <h2>SITS.COM</h2> </div>
+    <div class="nav-toggle">
+    <button onclick="toggleMenu()">☰</button></div>
+    <ul id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#AboutUs">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#Services">Services</a></li>
+      <li><a href="#">Payment</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+    <section id="hero">
+        <div class="hero-container">
+            <img src="images/image1.jpg" alt=" A mother and her daughter dancing">
+            <div class="hero-words">
+            <h1>Hey Busy <span id="parents-text">Parents</span></h1>
+            <p>We do all the work <br>for your children</p>
+            </div>
+            <div class="hero-buttons">
+            <button class="btn1" onclick="location.href='login.html?role=parent'"> Find a Sitter</button>
+            <button class="btn2" onclick="location.href='login.html?role=sitter'">I'm a Sitter</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="story">
+        <div class="our-story">
+            <div class="story-words">
+                <h2>Our Story:</h2>
+                <h3>Founded with the mission of providing safe, <br>
+                    professional,and nurturing babysitting  services, <br>
+                    we have become a leading platform connecting <br> 
+                    families with highly  qualified babysitters.</h3>
+            </div>
+            <div class="story-images">
+            <img class="storyImg1" src="images/childpic1.png" alt="children playing">
+            <img class="storyImg2" src="images/childpic2.png" alt="3 children playing">
+            <img class="storyImg3" src="images/childpics3.webp" alt=" a child playing">
+            </div>
+        </div>
+    </section>
+
+    <section id="sitters">
+        <div class="sitters-words">
+        <h2>Meet Few Of Our Sitters</h2>
+        <p>Below are some of our outstanding sitters.</p>
+        </div>
+
+        <div id="sitterList">
+        <div class="sitter" data-location="Abuja">
+            <img src="images/ElizabethLewis.jpg" alt="Elizabeth lewis">
+            <div class="sitter-info">
+            <p>Elizabeth lewis <br> Age 35 <br>
+                <span class="pin">📍</span>Abuja,Nigeria</p>
+        </div>
+        </div>
+        <div class="sitter" data-location="Onitsha">
+            <img src="images/ChizomJohn.jpg" alt="Chizom John">
+            <div class="sitter-info">
+            <p>Chizom John <br> Age 32 <br>
+                <span class="pin">📍</span>Anambra,Nigeria</p>
+            </div>
+        </div>
+        <div class="sitter" data-location="Zaria">
+            <img src="images/BintuAbdul.jpg" alt="Bintu abdul">
+            <div class="sitter-info">
+            <p>Bintu Abdul <br> Age 29 <br> 
+                <span class="pin">📍</span>Zaria, Kaduna Nigeria</p>
+            </div>
+        </div>
+        </div>
+    </section>
+
+   <section id="safety">
+        <div class="safety-container">
+        <h2>Focused on Trust & Safety</h2>
+        <div class="safety-features">
+        <p class="team">Our dedicated team champions Safety procedures across our
+            platform everyday. We also offer a suite of screening tools
+            that allow families to hire Sitter team with confidence.
+        </p>
+        <div >
+            <h3> <img src="images/check-iconb.png" alt="✔"> Screening tools for families</h3>
+            <p class="pp"> Secure messaging, interview booking, background check options
+                    for extra peace of mind</p>
+            <h3> <img src="images/check-iconb.png" alt="✔">Trusted community </h3>
+            <p class="pp"> Detailed profiles, ratings & reviews from local families and
+                    references contact information</p>
+            <h3> <img src="images/check-iconb.png" alt="✔">100% Sitter Verification </h3>
+            <p class="pp">Scam prevention, family watchdog screening, Sitter ID
+                    authentication and ongoing site content monitoring</p>
+        </div>
+        </div>
+        </div>
+
+       <div class="image-box">
+        <img class="mom" src="images/image5.jpg" alt="Mom and child">
+        <div class="badge">
+        <p>Sitter <br>Nike Ajao <br>★ ★ ★ ★ ★<br>Lagos , Nigeria</p>
+        </div>
+        <div class="sitter-selector">
+        <h4>Select sitter<br>Available for work</h4>
+            <div class="sitter-box">
+                <a href="sitters.html">
+                <img src="images/box-1.jpg" alt="Mary Jay">
+                <p>Mary Jay <br>
+                ★★★★☆<br>
+                Benin, Edo State Nigeria </p>
+                </a>
+            </div>
+            <div class="sitter-box">
+                <a href="sitters.html">
+                <img src="images/box-2.jpg" alt="Nike Ajao">
+                <p>Nike Ajao <br>
+                ★★★★★<br>
+                Lagos , Nigeria</p>
+                </a>
+            </div>
+            <div class="sitter-box">
+                <a href="sitters.html">
+                <img src="images/box-3.jpg" alt="Bintu Abdul">
+                <p>Bintu Abdul <br>
+                ★★★★☆<br>
+                Abuja, Nigeria </p>
+                </a>
+            </div>
+          </div>
+          </div>
+    </section>
+
+    <section id="Services">
+        <div class="services-container">
+        <div class="serve-contain">
+        <h2 class="title">
+                <span class="full-text">
+                <span class="light">Our</span> 
+                <span class="heavy">Services</span>
+            </span>
+        </h2>
+
+        <div class="serve">
+                <h3> <img src="images/babyh.png" alt="">In-Home Babysitting </h3>
+                <p>Enjoy peace of mind with our trusted sitters who <br>
+                    care for your child right in the comfort of your home.
+                </p>
+                <h3> <img src="images/clock.png" alt="">Flexible Scheduling </h3>
+                <p>Whether its's part-time, full-time, or just few hours, we offer <br>
+                    babysitting services that fit seamlessly into your routine.
+                </p>
+                <h3> <img src="images/moon.png" alt="">Evening & Weekend Care </h3>
+                <p>Going out or working late? We've got you covered with reliable <br>
+                    babysitters available nights, weekends, and even on short notice.
+                </p>
+        </div>
+        </div>
+        <div class="btn4">
+        <button onclick="location.href='#Services'">See More</button>
+        </div>
+        </div>
+    </section>
+
+
+    <section id="AboutUs">
+        <div class="aboutus">
+        <h2>About Us</h2>
+        <p>So Much More Than A Babysitter</p>
+        <div class="about">
+            <img src="images/image6.jpg" alt=" A Sitter playing with three children ">
+            <p>At Sits.com we believe every child deserves nurturing, safety, and joy.
+                our team of experienced, background checked babysitters is passionate about creating
+                a fun and secure environment for your little ones. Whether it's storytime, playtime,
+                or bedtime, we tailor care to each child's needs and personality. We're not just sitters,
+                we're trusted partners in your parenting journey. Discover childcare that's professional,
+                personal, and full of heart. Because your family is our family.
+            </p>
+        </div>
+        </div>
+    </section>
+    </main>
+
+    <footer id="contact">
+        <div class="contactus">
+            <img src="./images/sit.com_logo.png" alt="logo" class="logo">
+            <h2>Get in Touch</h2>
+            <div class="mail">
+              <img src="./images/mail.png" alt="mail.icon">   
+              <p> sitts.com@gmail.com</p>
+            </div>
+            <div class="phone">
+                <img src="./images/call-icon.png" alt="call-icon">
+                <p> +233 24 370 3830</p>
+            </div> 
+        </div>
+
+        <div class="links">
+            <ul>
+                <li><a href="#AboutUs">About</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#Services">Service</a></li>
+                <li><a href="#safety">Job</a></li>
+            </ul>
+        </div>
+        <div class="links">
+            <ul>
+                <li><a href="#Ourstory">Company</a></li>
+                <li><a href="#AboutUs">Our Team</a></li>
+                <li><a href="#safety">Job</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#Services">About service</a></li>
+            </ul>
+        </div>
+        <div class="subscribe">
+            <form onsubmit="event.preventDefault(); alert('Subscribed!');">
+                <input type="email" id="email" name="email" placeholder="Enter your email">
+                <button class="btn9" type="Submit"> Subscribe</button><br>
+            </form>
+            <div class="socials">
+                <a href="#" class="twitter"><img src="./images/Twitter icon.png" alt="Twitter"></a>
+                <a href="#"><img src="./images/Facebook.png" alt="Facebook"></a>
+                <a href="#"><img src="./images/Instagram_icon.png" alt="Instagram_icon">
+                <a href="#"><img src="./images/social-06-512.png" alt="socials"></a>
+
+            </div>
+            <div class="payment">
+               <a href="#"><img src="./images/amazon.png" alt="Amazon"></a>
+               <a href="#"><img src="./images/visa.png" alt="Visa"></a>
+               <a href="#"><img src="./images/Apple_Pay.png" alt="Apple_Pay"></a>
+               <a href="#"><img src="./images/mastercard.png" alt="mastercard"></a> 
+            </div>
+         </div>
+    </footer>
+    <script src="script.js" defer></script>
+
+</body>
+</html>

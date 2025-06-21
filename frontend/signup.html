@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="styleregister.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <h1>Create your account</h1>
+      <p>Please fill in this form to create an account!</p>
+      <form id="signup-form" action="/register" method="post" enctype="multipart/form-data">
+        <div class="input-row" >
+        <!-- First and Last Name -->
+        <div class="input-box">
+          <label for="firstname">Firstname:</label>
+          <input type="text" id="firstname" name="firstname" placeholder="e.g Patience" required />
+          
+          <label for="lastname">Lastname:</label>
+          <input type="text" id="lastname" name="lastname" placeholder="e.g Ajao" required />
+        </div>
+
+        <!-- Location and Profile Picture -->
+        <div class="input-box">
+          <label for="location">Location:</label>
+          <input type="text" id="location" name="location" placeholder="City, State" required />
+
+          <label for="profilePic">Profile Picture:</label>
+          <input type="file" id="profilePic" name="profilePic" accept="image/*" required />
+          <img id="preview" src="#" alt="Image Preview" style="display: none; max-width: 150px; margin-top: 1rem;" />
+        </div>
+           <!-- years of experience -->
+        <div class="input-box">
+          <label for="years">Years of Experience:</label>
+          <input type="number" id="years" name="years" placeholder="e.g 1" required />
+
+          <label for="availablility">Availablility:</label>
+          <input type="text" id="availablility" name="availablility" placeholder="e.g 6 months" required />
+        </div>
+        
+        <!-- Phone and Email -->
+        <div class="input-box">
+          <label for="phone">Phone Number:</label>
+          <input type="tel" id="phone" name="phone" placeholder="(000) 000-0000" required />
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" placeholder="e.g example@gmail.com" required />
+        </div>
+
+        <!-- Passwords -->
+        <div class="input-box">
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required />
+
+          <label for="confirmPassword">Confirm Password:</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" required />
+        </div>
+        </div>
+
+        <!-- Submit Button -->
+         <div class="button">
+        <button type="submit" class="btn">Sign Up</button>
+        </div>
+
+        <!-- Link to Login -->
+        <div class="register-link">
+          <p>Already have an account? <a href="login.html">Log In</a></p>
+        </div>
+      </form>
+      </div>
+    <script src="script.js" defer></script>
+
+  </body>
+</html>
+
