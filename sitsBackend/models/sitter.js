@@ -41,6 +41,7 @@ const sitterProfile = (sequelize) => {
     },
     availability: {
       type: DataTypes.JSON,
+      
       allowNull: true,
     },
     profilePic: {
