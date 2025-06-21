@@ -23,6 +23,7 @@ const storage = multer.diskStorage({
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
+
 const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 },
@@ -50,10 +51,25 @@ router.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend', 'sitter.login.html'));
 });
 
-
+router.get('/match', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.userId);
+    if (!user || user.role !== 'parent') {
+      return res.status(403).json({ message: 'Access restricted to parents' });
+    }
+    const sitters = await findMatchingSitters(user.location);
+    res.json(sitters);
+  } catch (error) {
+    console.error('Matching error:', error);
+    res.status(500).json({ message: 'Failed to find matching sitters', error: error.message });
+  }
+});
 
 // Routers to handle all post requests for the sitters
 router.post('/register', upload.single('profilePic'), registerSitter);
+router.post('/login', loginSitter);
+
+/*
 
 // This is irrelevant
 router.post('/signup', upload.single('profilePic'), async (req, res) => {
@@ -101,6 +117,7 @@ router.post('/signup', upload.single('profilePic'), async (req, res) => {
   }
 });
 
+*/
 
 // router.post('/signup', upload.single('profilePic'), async (req, res) => {
 //   try {
@@ -134,7 +151,8 @@ router.post('/signup', upload.single('profilePic'), async (req, res) => {
 //   }
 // });
 
-router.post('/login', loginSitter);
+
+/*
 
 router.post('/sitterlogin', async (req, res) => {
   try {
@@ -159,18 +177,6 @@ router.post('/sitterlogin', async (req, res) => {
   }
 });
 
-router.get('/match', authMiddleware, async (req, res) => {
-  try {
-    const user = await User.findByPk(req.user.userId);
-    if (!user || user.role !== 'parent') {
-      return res.status(403).json({ message: 'Access restricted to parents' });
-    }
-    const sitters = await findMatchingSitters(user.location);
-    res.json(sitters);
-  } catch (error) {
-    console.error('Matching error:', error);
-    res.status(500).json({ message: 'Failed to find matching sitters', error: error.message });
-  }
-});
+*/
 
 export default router;
