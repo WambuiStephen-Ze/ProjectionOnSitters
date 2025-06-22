@@ -4,6 +4,9 @@ import { createUser, getUserById, getUserByEmail, updateUser } from '../models/i
 
 export const registerParent = async (req, res) => {
     try {
+        console.log('Headers: ', req.headers);
+        console.log('BODY:', req.body);
+
         const { 
             firstname, 
             lastname, 
@@ -14,7 +17,7 @@ export const registerParent = async (req, res) => {
             numKids, 
             ageKids,
             profilePic 
-        } = req.body;
+        } = req.body; 
 
         if (!firstname || !lastname || !email || !password || !phone) {
             return res.status(400).json({ message: 'Missing required fields' });

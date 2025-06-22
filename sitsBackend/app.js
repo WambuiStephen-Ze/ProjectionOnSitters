@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 
 // ✅ API Routes
 app.use('/api/sitters', sitterRoutes);
-app.use('/api/bookings', bookingRoutes);
+app.use('/api/bookings', bookingRoutes); 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 // ✅ Global error handler (should be last middleware)
