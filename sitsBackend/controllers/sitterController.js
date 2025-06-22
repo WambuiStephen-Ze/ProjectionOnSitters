@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { Sitter, Booking, getSitterByEmail } from '../models/index.js';
 
 export const registerSitter = async (req, res) => {
-    try {
+    try { 
         const {
             firstname,
             lastname,
@@ -45,7 +45,8 @@ export const registerSitter = async (req, res) => {
             phone,
             password,
             location,
-            experience: years,
+            profilePic: req.file ? `/uploads/sitters_profilePic/${req.file.filename}` : null,
+            experience: parseInt(years),
             availability,
         });
 

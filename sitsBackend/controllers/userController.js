@@ -8,16 +8,18 @@ export const registerParent = async (req, res) => {
         console.log('BODY:', req.body);
 
         const { 
-            firstname, 
-            lastname, 
-            email, 
-            phone, 
-            password, 
-            location, 
-            numKids, 
-            ageKids,
-            profilePic 
-        } = req.body; 
+    firstname, 
+    lastname, 
+    email, 
+    phone, 
+    password, 
+    location, 
+    numKids, 
+    ageKids 
+} = req.body;
+
+const profilePic = req.file ? `/uploads/users_profilePics/${req.file.filename}` : null;
+
 
         if (!firstname || !lastname || !email || !password || !phone) {
             return res.status(400).json({ message: 'Missing required fields' });

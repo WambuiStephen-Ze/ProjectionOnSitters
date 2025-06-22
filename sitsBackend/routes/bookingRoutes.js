@@ -5,6 +5,7 @@ import { Sitter, User, Booking } from '../models/index.js';
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
+import authMiddleware from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -23,6 +24,9 @@ const parseExperience = (experience) => {
     const match = experience.match(/\d+/);
     return match ? parseInt(match[0]) : 0;
 };
+
+// POST /api/bookings
+router.post('/', authMiddleware, createBooking);
 
 // Create a new booking
 router.post('/secure', protect, async (req, res) => {

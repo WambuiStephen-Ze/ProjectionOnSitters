@@ -8,6 +8,7 @@ import { findMatchingSitters } from '../services/matchingService.js';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import multer from 'multer';
+import fs from 'fs';
 
 // Importing necessary sitters controllers
 import { loginSitter, registerSitter } from '../controllers/sitterController.js';
@@ -15,9 +16,16 @@ import { loginSitter, registerSitter } from '../controllers/sitterController.js'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
+// Dynamically adding directories for sitters profile pic upload if it doesn't exist
+const destPath = path.join(__dirname, '../../frontend/uploads/sitters_profilePics');
+if (!fs.existsSync(destPath)) {
+  fs.mkdirSync(destPath, { recursive: true });
+}
+ 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../../frontend/uploads/'));
+    cb(null, destPath);
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
@@ -41,6 +49,16 @@ const router = express.Router();
 // Routers to handle all get requests for the sitters
 router.get('/', async (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend', 'sitters.html'));
+});
+
+router.get('/data', async (req, res) => {
+  try {
+    const sitters = await Sitter.findAll();
+    res.json(sitters);
+  } catch (error) {
+    console.error('Error fetching sitters: ', errors);
+    res.status(500).json({message: 'Failed to fetch sitters', error: error.message});
+  }
 });
 
 router.get('/register', (req, res) => {
