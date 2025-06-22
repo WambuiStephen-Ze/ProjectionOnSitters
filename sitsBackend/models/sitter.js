@@ -44,6 +44,7 @@ const sitterProfile = (sequelize) => {
       
       allowNull: true,
     },
+   
     profilePic: {
       type: DataTypes.STRING,
       allowNull: true,
