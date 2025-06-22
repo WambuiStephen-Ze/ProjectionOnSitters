@@ -158,7 +158,7 @@ const registerUser = () => {
 
     const formData = new FormData(form);
     const role = form.id === "signup-form" ? "sitter" : "parent";
-    const endpoint = role === "sitter" ? "/sitters/signup" : "/auth/register";
+    const endpoint = role === "sitter" ? "/sitters/sigup" : "/auth/register";
 
     try {
       const res = await fetch(`${BASE_URL}${endpoint}`, {
@@ -226,7 +226,7 @@ const setupRegisterLink = () => {
 
   if (registerLink) {
     // registerLink.href = role === "sitter" ? "/sitter/register" : "/parent/register";
-    registerLink.href = role === "sitter"
+    registerLink.href = role === "sitters"
   ? "signup.html?role=sitter"
   : "register.html?role=parent";
 

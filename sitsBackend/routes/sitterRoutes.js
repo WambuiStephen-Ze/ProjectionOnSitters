@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend', 'sitters.html'));
 });
 
-router.get('/register', (req, res) => {
+router.get('/signup', (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend', 'signup.html'));
 });
 
