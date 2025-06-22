@@ -16,13 +16,6 @@ import { loginSitter, registerSitter } from '../controllers/sitterController.js'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
-// Dynamically adding directories for sitters profile pic upload if it doesn't exist
-const destPath = path.join(__dirname, '../../frontend/uploads/sitters_profilePics');
-if (!fs.existsSync(destPath)) {
-  fs.mkdirSync(destPath, { recursive: true });
-}
- 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, destPath);
@@ -61,7 +54,7 @@ router.get('/data', async (req, res) => {
   }
 });
 
-router.get('/register', (req, res) => {
+router.get('/signup', (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend', 'signup.html'));
 });
 
@@ -116,6 +109,7 @@ router.post('/signup', upload.single('profilePic'), async (req, res) => {
     const user = await User.create({
       firstname,
       lastname,
+      location,
       email,
       password: hashedPassword,
       phone,
@@ -123,7 +117,12 @@ router.post('/signup', upload.single('profilePic'), async (req, res) => {
     });
     await Sitter.create({
       userId: user.id,
+      firstname,
+      lastname,
       location,
+      password,
+      phone,
+      email,
       experience: years,
       availability: availabilityJSON,
       profilePic: req.file ? `/uploads/${req.file.filename}` : null,
@@ -183,6 +182,9 @@ router.post('/sitterlogin', async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
+
+    const secret = process.env.JWT_SECRET || 'my-super-secret';
+
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: 'sitter' },
       process.env.JWT_SECRET,
