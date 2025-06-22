@@ -189,7 +189,7 @@ const loginUser = () => {
 
     const urlParams = new URLSearchParams(window.location.search);
     const role = urlParams.get("role") || "parent";
-    const endpoint = role === "sitter" ? "/sitters/loginSitter" : "/auth/login";
+    const endpoint = role === "sitter" ? "/sitters/login" : "/auth/login";
 
     const formData = new FormData(form);
     const data = {
@@ -227,8 +227,8 @@ const setupRegisterLink = () => {
   if (registerLink) {
     // registerLink.href = role === "sitter" ? "/sitter/register" : "/parent/register";
     registerLink.href = role === "sitters"
-  ? "signup.html?role=sitter"
-  : "register.html?role=parent";
+  ? "signup.html"
+  : "register.html";
 
   }
 };

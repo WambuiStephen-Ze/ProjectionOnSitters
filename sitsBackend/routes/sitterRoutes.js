@@ -16,6 +16,15 @@ import { loginSitter, registerSitter } from '../controllers/sitterController.js'
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+
+// Dynamically adding directories for sitters profile pic upload if it doesn't exist
+const destPath = path.join(__dirname, '../../frontend/uploads/sitters_profilePics');
+if (!fs.existsSync(destPath)) {
+  fs.mkdirSync(destPath, { recursive: true });
+}
+ // const secret = process.env.JWT_SECRET || 'your-default-secret';
+
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, destPath);
