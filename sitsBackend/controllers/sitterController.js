@@ -58,11 +58,15 @@ export const registerSitter = async (req, res) => {
             },
             process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.status(201).json(
-            {
-                message: 'Sitter registered successfully', sitterId: newSitter.id, token
-            }
-        );
+        if (token) {
+            console.log('Sitter registration successful:', {
+                sitterId: newSitter.id,
+                email: newSitter.email
+            });
+        }
+
+
+        res.redirect('/api/sitters/login')
 
     } catch (error) {
         console.error('Sitter registration error:', error);
@@ -99,9 +103,12 @@ export const loginSitter = async (req, res) => {
             process.env.JWT_SECRET, { expiresIn: '1h' }
         );
 
-        res.json(
-            { message: 'Login successful', sitterId: sitter.id, token }
-        );
+        if (token) {
+            console.log('Sitter login successful:', { sitterId: sitter.id, email: sitter.email });
+            
+        }
+
+        res.redirect('/api/sitters');
 
     } catch (error) {
         console.error('Sitter login error:', error);
