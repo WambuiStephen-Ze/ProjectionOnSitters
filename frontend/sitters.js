@@ -1,60 +1,12 @@
 const BASE_URL = "https://localhost:3000";
 
-document.addEventListener("DOMContentLoaded", function () {
-// Book buttons (for multiple sitters)
-    const bookme = document.querySelectorAll(".bookme");
 
-    bookme.forEach((button) => {
-        button.addEventListener("click", function () {
-            const name = this.parentNode.parentNode.querySelector(".box > .content > h3")?.textContent
-            if (name)
-                alert(`You have booked ${name}!`);
-        });
-    });
+console.log("sitters.js loaded ✅");
 
-    bookme.forEach((button) => {
-        button.addEventListener("click", async function () {
-            const name = this.parentNode.parentNode.querySelector(".box > .content > h3")?.textContent;
-            const sitterId = this.dataset.sitterid;
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("You must be logged in to book a sitter.");
-      return;
-    }
-
-    try {
-      const res = await fetch(`${BASE_URL}/bookings/secure`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          sitterId,
-          userId: "USER_ID_FROM_TOKEN_OR_API",
-          date: new Date().toISOString()
-        })
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        alert(`You have successfully booked ${name}!`);
-        this.textContent = "Unavailable";
-        this.disabled = true;
-        this.style.backgroundColor = "gray";
-        this.style.cursor = "not-allowed";
-      } else {
-        alert(data.message || "Booking failed.");
-      }
-    } catch (err) {
-      console.error("Booking error:", err);
-    }
-  });
-    });
-});
 
 document.addEventListener('DOMContentLoaded', async() => {
+  console.log("Fetching sitters...");
   // container to display the sitter
     const container = document.getElementById('sitters-list');
   try {
@@ -62,37 +14,102 @@ document.addEventListener('DOMContentLoaded', async() => {
     const sitters = await res.json();
     console.log('Sitters', sitters);
 
+    if (!Array.isArray(sitters)) throw new Error("Sitters is not an array");
+
 
     //looping through the data
     sitters.forEach(sitter => {
       const card = document.createElement('div');
       card.classList.add('item1');
+      // card.className = "item1";
+      const fullName = `${sitter.firstname} ${sitter.lastname}`;
+      const location = sitter.location || 'Unknown location';
+      const experience = sitter.experience ? `${sitter.experience} years exp` : 'Experience not set';
+      const availability = JSON.parse(sitter.availability || '"Not available"');
+      const phone = sitter.phone || 'Not provided';
+      const profilePic = sitter.profilePic || '/images/default-avatar.png';
 
       card.innerHTML = `
-      <div class="item1">
           <img class="symbol" src="/images/mark-up.png" alt="">
           <div class="box">
-            <img src="/uploads/sitters_profilePics/${sitter.profilePic}" alt="${sitter.name}">
+            <img src="${profilePic}" alt="${fullName}">
             <div class="content">
-              <h3>${sitter.name}</h3>
-              <p class="city"> <img src="/images/location.png" alt="${sitter.location}"> Jos, Nigeria</p>
-              <p class="years">${sitter.experience}</p>
+              <h3>${fullName}</h3>
+              <p class="city"> <img src="/images/location.png" alt="">${location}</p>
+              <p class="years">${experience}</p>
             </div>
           </div>
           <div class="sub-content">
-            <p class="avail"><img src="/images/clock2.png" alt="">${sitter.availability}</p>
-            <p class="phone"> <img src="/images/call-2.png" alt="">${sitter.phone}</p>
+            <p class="avail"><img src="/images/clock2.png" alt="">${availability}</p>
+            <p class="phone"> <img src="/images/call-2.png" alt="">${phone}</p>
           </div>
           <div class="book">
             <button class="bookme" data-sitter-id="${sitter.id}">Book Me</button>
           </div>
-        </div>
       `;
       container.appendChild(card);
     })
 
-  } catch {
-    console.error('Failed to fetch sitters', err);
+  } catch (error) {
+  console.error('Failed to fetch sitters:', error);
+}
+});
 
-  }
+document.addEventListener("DOMContentLoaded", () => {
+  const bookButtons = document.querySelectorAll(".bookme");
+
+  bookButtons.forEach((button) => {
+    button.addEventListener("click", async function () {
+      const name = this.closest(".item1").querySelector("h3")?.textContent;
+      const sitterId = this.dataset.sitterId; // NOTE: use camelCase
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("You must be logged in to book a sitter.");
+        window.location.href = "/login.html?redirect=/sitters.html";
+        return;
+      }
+
+      // OPTIONAL: decode user ID from token (or fetch it from backend if needed)
+      let userId;
+      try {
+        const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+        userId = tokenPayload.userId;
+      } catch {
+        alert("Invalid session. Please log in again.");
+        localStorage.removeItem("token");
+        window.location.href = "/login.html";
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/bookings`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            sitterId,
+            userId,
+            date: new Date(Date.now() + 60 * 60 * 1000).toISOString(), // optional: 1 hour later
+            duration: 2 // fixed value or input-based
+          })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert(`You have successfully booked ${name}!`);
+          this.textContent = "Booked";
+          this.disabled = true;
+          this.classList.add("disabled");
+        } else {
+          alert(data.message || "Booking failed.");
+        }
+      } catch (err) {
+        console.error("Booking error:", err);
+        alert("Something went wrong during booking.");
+      }
+    });
+  });
 });

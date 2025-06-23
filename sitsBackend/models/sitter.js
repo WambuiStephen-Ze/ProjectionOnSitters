@@ -40,7 +40,7 @@ const sitterProfile = (sequelize) => {
       allowNull: false,
     },
     availability: {
-      type: DataTypes.JSON,
+      type: "4",
       
       allowNull: true,
     },
