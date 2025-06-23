@@ -1,87 +1,4 @@
-// document.addEventListener('DOMContentLoaded', function() {
-//   const toggle = document.getElementById('nav.toggle');
-//   const navLinks = document.getElementById('nav-links');
-
-//   toggle.addEventListener('click', () => {
-//     navLinks.classList.toggle('show');
-//   });
-// });
-
-// document.addEventListener('DOMContentLoaded', function () {
-//   const links = document.querySelectorAll('.navbar a');
-//   const currentPage = window.location.pathname.split("/").pop(); // e.g., "about.html"
-
-//   links.forEach(link => {
-//     const linkPage = link.getAttribute('href');
-//     if (linkPage === currentPage) {
-//       link.classList.add('active');
-//     }
-//   });
-// });
-
-// /*document.addEventListener('DOMContentLoaded', function() {
-    
-//     const navToggle = document.createElement('button');
-//     navToggle.className = 'nav-toggle';
-//     navToggle.innerHTML = '☰';
-//     document.querySelector('header').prepend(navToggle);
-    
-//     navToggle.addEventListener('click', () => {
-//         document.querySelector('nav').style.display = 
-//             document.querySelector('nav').style.display === 'block' ? 'none' : 'block';
-//     });*/
-
-    
-//     const words = ['Parents', 'Moms', 'Dads', 'Guardians'];
-//     let currentIndex = 0;
-//     setInterval(() => {
-//         const parentText = document.getElementById('parents-text');
-//         parentText.style.opacity = 0;
-//         setTimeout(() => {
-//             parentText.textContent = words[currentIndex = (currentIndex + 1) % words.length];
-//             parentText.style.opacity = 1;
-//         }, 500);
-//     }, 3000);
-
-    
-//    document.querySelectorAll('.sitter-box a').forEach(box => {
-//     box.addEventListener('click', () => {
-//         window.location.href = 'sitters.html';
-//     });
-// });
-
-
-//     document.querySelector('.filter-buttons').addEventListener('click', (e) => {
-//         if (e.target.classList.contains('filter-btn')) {
-//             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-//             e.target.classList.add('active');
-//             const location = e.target.dataset.location;
-//             document.querySelectorAll('.sitter').forEach(sitter => {
-//                 sitter.style.display = (location === 'all' || sitter.dataset.location === location) ? 'block' : 'none';
-//             });
-//         }
-//     });
-
-    
-//     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-//         anchor.addEventListener('click', (e) => {
-//             e.preventDefault();
-//             const target = document.querySelector(anchor.getAttribute('href'));
-//             if (target) target.scrollIntoView({ behavior: 'smooth' });
-//         });
-//     });
-
-    
-                          
-//     document.querySelector('form[action="subscribe"]')?.addEventListener('submit', (e) => {
-//         e.preventDefault();
-//         const email = e.target.querySelector('input[type="email"]').value;
-//         alert(email.includes('@') ? `Thanks for subscribing with ${email}!` : 'Please enter a valid email');
-//         e.target.reset();
-//     });
-
-
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = "http://localhost:3000";
 
 function toggleMenu() {
   const navLinks = document.getElementById("nav-links");
@@ -149,36 +66,74 @@ const profilePictureReview = () => {
   }
 };
 
+// const registerUser = () => {
+//   const form = document.querySelector("#register-form, #signup-form");
+//   if (!form) return;
+
+//   form.addEventListener("submit", async (e) => {
+//     e.preventDefault();
+
+//     const formData = new FormData(form);
+//     const role = form.id === "signup-form" ? "sitter" : "parent";
+//     const endpoint = role === "sitter" ? "/sitters/signup" : "/auth/register";
+
+//     try {
+//       const res = await fetch(`${BASE_URL}${endpoint}`, {
+//         method: "POST",
+//         body: formData,
+//       });
+
+//       const data = await res.json();
+//       if (res.ok) {
+//         alert("Registration successful! Please log in.");
+//         window.location.href = `/login?role=${role}`;
+//       } else {
+//         alert(data.message || "Registration failed.");
+//       }
+//     } catch (error) {
+//       console.error("Registration error:", error);
+//       alert("Something went wrong during registration.");
+//     }
+//   });
+// };
+
 const registerUser = () => {
-  const form = document.querySelector("#register-form, #signup-form");
+  const form = document.querySelector("#register-form") || document.querySelector("#signup-form");
   if (!form) return;
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const formData = new FormData(form);
+
+    // Decide user role based on form ID
     const role = form.id === "signup-form" ? "sitter" : "parent";
-    const endpoint = role === "sitter" ? "/sitters/sigup" : "/auth/register";
+    const endpoint = role === "sitter" ? "/api/sitters/register" : "/api/users/register";
 
     try {
-      const res = await fetch(`${BASE_URL}${endpoint}`, {
+      const res = await fetch(endpoint, {
         method: "POST",
         body: formData,
       });
 
       const data = await res.json();
+
       if (res.ok) {
         alert("Registration successful! Please log in.");
         window.location.href = `/login?role=${role}`;
       } else {
         alert(data.message || "Registration failed.");
       }
-    } catch (err) {
-      console.error("Registration error:", err);
+    } catch (error) {
+      console.error("Registration error:", error);
       alert("Something went wrong during registration.");
     }
   });
 };
+
+// Run this after DOM loads
+document.addEventListener("DOMContentLoaded", registerUser);
+
 
 const loginUser = () => {
   const form = document.querySelector("#loginForm");
@@ -226,9 +181,7 @@ const setupRegisterLink = () => {
 
   if (registerLink) {
     // registerLink.href = role === "sitter" ? "/sitter/register" : "/parent/register";
-    registerLink.href = role === "sitters"
-  ? "signup.html"
-  : "register.html";
+    registerLink.href = role === "sitters" ? "signup.html" : "register.html";
 
   }
 };

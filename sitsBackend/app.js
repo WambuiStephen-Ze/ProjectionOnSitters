@@ -21,8 +21,10 @@ connectDB();
 
 // ✅ Middleware
 app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 // ✅ Static frontend files
 app.use(express.static(path.join(__dirname, '../frontend')));
@@ -33,6 +35,10 @@ app.use('/api/sitters', sitterRoutes);
 app.use('/api/bookings', bookingRoutes); 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+
+
+//sitter for html view 
+app.use('/sitters', sitterRoutes)
 // ✅ Global error handler (should be last middleware)
 app.use((err, req, res, next) => {
     console.error('Global error:', err.stack);
