@@ -53,7 +53,7 @@ const profilePic = req.file ? `/uploads/users_profilePics/${req.file.filename}` 
 
     } catch (error) {
         console.error('Registration error:', error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+        res.status(500).json({ message: 'Email already exist', error: error.message });
     }
 };
 
@@ -81,6 +81,17 @@ export const loginParent = async (req, res) => {
             { userId: user.id, email: user.email }, 
             process.env.JWT_SECRET, { expiresIn: '1h' }
         );
+
+    //    if (token) {
+    //      res.json({ token });
+    //    }
+        //set http only cookies for token
+        res.cookie('token', token, {
+            httponly: true,
+            secure:process.env.NODE_ENV === 'production', 
+            sameSite: 'Strict',
+            maxAge: 3600000,
+        }); 
 
         console.log('User login successful:', { userId: user.id, email: user.email });
 

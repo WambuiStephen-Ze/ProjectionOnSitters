@@ -66,36 +66,6 @@ const profilePictureReview = () => {
   }
 };
 
-// const registerUser = () => {
-//   const form = document.querySelector("#register-form, #signup-form");
-//   if (!form) return;
-
-//   form.addEventListener("submit", async (e) => {
-//     e.preventDefault();
-
-//     const formData = new FormData(form);
-//     const role = form.id === "signup-form" ? "sitter" : "parent";
-//     const endpoint = role === "sitter" ? "/sitters/signup" : "/auth/register";
-
-//     try {
-//       const res = await fetch(`${BASE_URL}${endpoint}`, {
-//         method: "POST",
-//         body: formData,
-//       });
-
-//       const data = await res.json();
-//       if (res.ok) {
-//         alert("Registration successful! Please log in.");
-//         window.location.href = `/login?role=${role}`;
-//       } else {
-//         alert(data.message || "Registration failed.");
-//       }
-//     } catch (error) {
-//       console.error("Registration error:", error);
-//       alert("Something went wrong during registration.");
-//     }
-//   });
-// };
 
 const registerUser = () => {
   const form = document.querySelector("#register-form") || document.querySelector("#signup-form");
@@ -108,7 +78,7 @@ const registerUser = () => {
 
     // Decide user role based on form ID
     const role = form.id === "signup-form" ? "sitter" : "parent";
-    const endpoint = role === "sitter" ? "/api/sitters/register" : "/api/users/register";
+    const endpoint = role === "sitter" ? "/api/sitters/signup" : "/api/users/register";
 
     try {
       const res = await fetch(endpoint, {
@@ -163,7 +133,7 @@ const loginUser = () => {
       if (res.ok) {
         localStorage.setItem("token", result.token);
         alert("Login successful!");
-        window.location.href = role === "sitter" ? "/sitters.html" : "/sitters.html";
+        window.location.href = role === "sitter" ? "/sitters" : "/sitters";
       } else {
         alert(result.message || "Login failed.");
       }
@@ -210,5 +180,42 @@ document.addEventListener("DOMContentLoaded", () => {
     registerUser();
   } else if (path.includes("login")) {
     loginUser();
+  }
+});
+// sitters section dynamically
+document.addEventListener('DOMContentLoaded', async () => {
+  const container = document.getElementById('featured-sitters');
+  if (!container) return;
+  try {
+    
+    const res = await fetch(`${BASE_URL}/api/sitters/data`);
+    const sitters = await res.json();
+
+    sitters.slice(0, 3).forEach(sitter => {
+      const box = document.createElement('div');
+      box.classList.add('sitter-box');
+      const fullName = `${sitter.firstname} ${sitter.lastname}`;
+      const location = sitter.location || 'Unknown';
+      const profilePic = sitter.profilePic && sitter.profilePic !== "null"
+        ? sitter.profilePic
+        : '/images/default-avatar.png';
+      box.innerHTML = `
+        <a href="/api/sitters">
+          <img 
+            src="${profilePic}" 
+            alt="${fullName}" 
+            width="120" height="120"
+            loading="lazy"
+            onerror="this.onerror=null;this.src='/images/default-avatar.png';"
+          >
+          <p>${fullName}<br>★★★★★<br>${location}</p>
+        </a>
+      `;
+      container.appendChild(box);
+    });
+    
+  }catch (error) {
+    console.error('error fetching sitters:', error);
+    alert("Failed to load sitters. Please try again.");
   }
 });

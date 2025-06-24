@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // ✅ Static frontend files
 app.use(express.static(path.join(__dirname, '../frontend')));
-app.use('/uploads', express.static(path.join(__dirname, '../frontend/uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '..frontend//uploads')));
 
 // ✅ API Routes
 app.use('/api/sitters', sitterRoutes);
@@ -38,7 +38,7 @@ app.use('/api/users', userRoutes);
 
 
 //sitter for html view 
-app.use('/sitters', sitterRoutes)
+// app.use('/sitters', sitterRoutes)
 // ✅ Global error handler (should be last middleware)
 app.use((err, req, res, next) => {
     console.error('Global error:', err.stack);
