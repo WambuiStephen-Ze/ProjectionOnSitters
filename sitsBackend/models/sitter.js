@@ -40,7 +40,7 @@ const sitterProfile = (sequelize) => {
       allowNull: false,
     },
     availability: {
-      type: "4",
+      type: DataTypes.STRING,
       
       allowNull: true,
     },
