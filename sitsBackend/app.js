@@ -74,6 +74,19 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
 });
 
+
+app.post('/api/bookings', async (req, res) => {
+  const { sitterId, userId, date, duration } = req.body;
+
+  // 1. Create a new booking in the database (assuming a "bookings" table or collection)
+  const newBooking = new Booking({
+    sitterId,
+    userId,
+    date,
+    duration,
+    status: 'pending', // Status could be 'pending', 'accepted', or 'declined'
+  });
+
 app.get('/api/payment-details', (req, res) => {
     res.json({
         companyName: 'Sits.com',
@@ -81,5 +94,53 @@ app.get('/api/payment-details', (req, res) => {
         accountNumber: 'SITS-001',
     });
 });
+await newBooking.save();
+
+  // 2. Send email to sitter to accept or decline the booking
+  const sitter = await User.findById(sitterId); // Assume User is the model for users/sitters
+  const user = await User.findById(userId);
+
+  sendSitterBookingEmail(sitter, newBooking);
+
+  // Return a success message to the frontend
+  res.status(201).json({ message: 'Booking created successfully', bookingId: newBooking._id });
+});
+
+app.get('/api/booking/accept/:bookingId', async (req, res) => {
+  const bookingId = req.params.bookingId;
+
+  const booking = await Booking.findById(bookingId);
+  if (!booking) return res.status(404).json({ message: 'Booking not found.' });
+
+  booking.status = 'accepted';
+  await booking.save();
+
+  const sitter = await User.findById(booking.sitterId);
+  const user = await User.findById(booking.userId);
+
+  // Send confirmation email to both sitter and user with Zoom link
+  sendConfirmationEmail(sitter, user, booking);
+
+  res.status(200).json({ message: 'Booking accepted successfully.' });
+});
+
+app.get('/api/booking/decline/:bookingId', async (req, res) => {
+  const bookingId = req.params.bookingId;
+
+  const booking = await Booking.findById(bookingId);
+  if (!booking) return res.status(404).json({ message: 'Booking not found.' });
+
+  booking.status = 'declined';
+  await booking.save();
+
+  const user = await User.findById(booking.userId);
+
+  // Send decline email to the user
+  sendDeclineEmail(user, booking);
+
+  res.status(200).json({ message: 'Booking declined successfully.' });
+});
+
+
 
 export default app;

@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
   try {
-    const res = await fetch('sitters/data');
+    const res = await fetch('/api/sitters/data');
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // {`/uploads/sitters_profilePic/${imageFilename}`}
       // <img src="${profilePic}" alt="${fullName}">
       // <img class="symbol" src="/images/1750666087506-AWG1.jpg" alt="">
+      console.log(profilePic);
 
       card.innerHTML = `
           
@@ -70,15 +71,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // Attach fallback if image fails to load
       const imgElement = card.querySelector('img[alt="' + fullName + '"]');
-      if (imgElement) {
+      if (!imgElement) {
         imgElement.onerror = function () {
           this.src = '/uploads/sitters_profilePic/default.jpg';
         };
       }
   });
 
-    //  Add click listeners AFTER rendering
-    document.addEventListener('DOMContentLoaded', () => {
       const bookButtons = document.querySelectorAll(".bookme");
       bookButtons.forEach((button) => {
         button.addEventListener("click", async function () {
@@ -105,7 +104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // const parsePayLoad = JSON.parse(tokenPayload);
             // userId = tokenPayload.userId;
             const now = Date.now() / 1000;
-            if (parsedPayLoad.exp < now) {
+            if (tokenPayload.exp < now) {
               alert("token expired. Please log in again");
               window.location.href = "/login.html";
               return;
@@ -126,7 +125,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
-                // "Authorization": `Bearer ${token}`,
+                "Authorization": `Bearer ${token}`,
               },
               body: JSON.stringify({
                 sitterId,
@@ -152,7 +151,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
         });
       });
-    });
   }catch (error) {
     console.log('Could not fetch', error);
 
@@ -168,3 +166,123 @@ function getCookie(name) {
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(';').shift();
 }    
+
+const nodemailer = require('nodemailer');
+
+const sendSitterBookingEmail = (sitter, booking) => {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail', // Use your email service
+    auth: {
+      user: 'your-email@gmail.com',
+      pass: 'your-email-password',
+    },
+  });
+
+  const mailOptions = {
+    from: 'stephengathwe@gmail.com',
+    to: sitter.email,
+    subject: `Booking request from ${booking.userName}`,
+    html: `
+      <p>You have received a booking request from ${booking.userName}.</p>
+      <p>Booking Details:</p>
+      <p>Date: ${booking.date}</p>
+      <p>Duration: ${booking.duration} hours</p>
+      <p><a href="http://yourdomain.com/booking/accept/${booking._id}">Click here to accept the booking</a></p>
+      <p><a href="http://yourdomain.com/booking/decline/${booking._id}">Click here to decline the booking</a></p>
+    `,
+  };
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.log('Error sending email:', err);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+};
+const sendConfirmationEmail = (sitter, user, booking) => {
+  const zoomLink = generateZoomMeetingLink(); // Function to create Zoom meeting link
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'your-email@gmail.com',
+      pass: 'your-email-password',
+    },
+  });
+
+  // Email to the sitter
+  const sitterMailOptions = {
+    from: 'your-email@gmail.com',
+    to: sitter.email,
+    subject: 'Booking Confirmation: Sitter Accepted',
+    html: `
+      <p>Your booking request has been accepted by ${user.name}.</p>
+      <p>Meeting Link: ${zoomLink}</p>
+      <p>Booking Details:</p>
+      <p>Date: ${booking.date}</p>
+      <p>Duration: ${booking.duration} hours</p>
+    `,
+  };
+
+  // Email to the user
+  const userMailOptions = {
+    from: 'your-email@gmail.com',
+    to: user.email,
+    subject: 'Booking Confirmation: Sitter Accepted',
+    html: `
+      <p>Your booking has been confirmed by ${sitter.name}.</p>
+      <p>Meeting Link: ${zoomLink}</p>
+      <p>Booking Details:</p>
+      <p>Date: ${booking.date}</p>
+      <p>Duration: ${booking.duration} hours</p>
+    `,
+  };
+
+  transporter.sendMail(sitterMailOptions, (err, info) => {
+    if (err) {
+      console.log('Error sending email to sitter:', err);
+    } else {
+      console.log('Email sent to sitter: ' + info.response);
+    }
+  });
+
+  transporter.sendMail(userMailOptions, (err, info) => {
+    if (err) {
+      console.log('Error sending email to user:', err);
+    } else {
+      console.log('Email sent to user: ' + info.response);
+    }
+  });
+};
+
+const sendDeclineEmail = (user, booking) => {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'your-email@gmail.com',
+      pass: 'your-email-password',
+    },
+  });
+
+  const mailOptions = {
+    from: 'your-email@gmail.com',
+    to: user.email,
+    subject: 'Booking Declined',
+    html: `
+      <p>Your booking request was declined by the sitter.</p>
+      <p>Please consider booking another sitter.</p>
+      <p>Booking Details:</p>
+      <p>Date: ${booking.date}</p>
+      <p>Duration: ${booking.duration} hours</p>
+    `,
+  };
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.log('Error sending decline email:', err);
+    } else {
+      console.log('Decline email sent to user: ' + info.response);
+    }
+  });
+};
