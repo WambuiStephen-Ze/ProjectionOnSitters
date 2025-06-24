@@ -1,4 +1,5 @@
 import { Booking, User, Sitter } from '../models/index.js';
+import { sendBookingConfirmation } from '../utils/emails.js';
 
 export const createBooking = async (req, res) => {
     try {
@@ -35,6 +36,21 @@ export const createBooking = async (req, res) => {
             status: 'pending',
             confirmationEmail: !!confirmationEmail
         });
+
+        // 🔧 Send confirmation email
+        if (confirmationEmail) {
+            try {
+                await sendBookingConfirmation(
+                    sitter.email,
+                    sitter.firstname,
+                    user.firstname,
+                    date
+                );
+                console.log(`📧 Email sent to ${sitter.email}`);
+            } catch (emailErr) {
+                console.error('📧 Email sending failed:', emailErr.message);
+            }
+        }
 
         return res.status(201).json({ message: 'Booking created successfully', booking });
     } catch (error) {
@@ -120,3 +136,4 @@ export const cancelBooking = async (req, res) => {
         return res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
